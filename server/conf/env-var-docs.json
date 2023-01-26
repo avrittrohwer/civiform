@@ -1,6 +1,5 @@
 {
 	"WHITELABEL_SMALL_LOGO_URL": {
-		"description": "Small logo used on the login page.",
 		"type": "string",
 		"regex": "^https?://",
 		"regex_tests": [
