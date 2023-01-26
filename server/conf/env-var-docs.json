@@ -1,4 +1,13 @@
 {
+	"MY_NEW_VAR": {
+		"description": "A new var",
+		"type": "string",
+		"regex": "^my new var$",
+		"regex_tests": [
+			{ "val": "my new var", "shouldMatch": true },
+			{ "val": "my old var", "shouldMatch": false }
+		]
+	},
 	"WHITELABEL_SMALL_LOGO_URL": {
 		"description": "Small logo used on the login page.",
 		"type": "string",
