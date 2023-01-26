@@ -13,6 +13,7 @@ concurrency:
 jobs:
   check-env-var-docs:
     env:
+      SCHEMA_PATH: ${{github.workspace}}/env-var-docs/env-var-docs-schema.json
       APPLICATION_CONF_PATH: ${{github.workspace}}/server/conf/application.conf
       ENV_VAR_DOCS_PATH: ${{github.workspace}}/server/conf/env-var-docs.json
     runs-on: ubuntu-latest
@@ -22,7 +23,7 @@ jobs:
       - name: Check schema
         run: |
           pip install check-jsonschema
-          check-jsonschema --schemafile $GITHUB_WORKSPACE/env-var-docs/schema/v1.json $GITHUB_WORKSPACE/server/conf/env-var-docs.json
+          check-jsonschema --schemafile $SCHEMA_PATH $ENV_VAR_DOCS_PATH
       - name: Check every env var documented
         run: python3 $GITHUB_WORKSPACE/env-var-docs/check-vars-documented.py
       - name: Run regular expression tests
