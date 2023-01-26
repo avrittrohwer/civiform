@@ -1,0 +1,29 @@
+name: check-env-var-docs
+on:
+  pull_request:
+    branches:
+      - main
+
+# cancels in-progress jobs on this pull request
+# avoids wasted work when a new commit is pushed
+concurrency:
+  group: format-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  check-env-var-docs:
+    env:
+      APPLICATION_CONF_PATH: ${{github.workspace}}/server/conf/application.conf
+      ENV_VAR_DOCS_PATH: ${{github.workspace}}/server/conf/env-var-docs.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout civiform/civiform
+        uses: actions/checkout@v3
+      - name: Check schema
+        run: |
+          pip install check-jsonschema
+          check-jsonschema --schemafile $GITHUB_WORKSPACE/env-var-docs/schema/v1.json $GITHUB_WORKSPACE/server/conf/env-var-docs.json
+      - name: Check every env var documented
+        run: python3 $GITHUB_WORKSPACE/env-var-docs/check-vars-documented.py
+      - name: Run regular expression tests
+        run: python3 $GITHUB_WORKSPACE/env-var-docs/check-regex-tests.py
