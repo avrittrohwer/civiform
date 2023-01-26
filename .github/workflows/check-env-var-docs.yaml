@@ -3,6 +3,10 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - env-var-docs/**
+      - server/conf/application.conf
+      - server/conf/env-var-docs.json
 
 # cancels in-progress jobs on this pull request
 # avoids wasted work when a new commit is pushed
