@@ -2,7 +2,7 @@
 	"WHITELABEL_SMALL_LOGO_URL": {
 		"description": "Small logo used on the login page.",
 		"type": "string",
-		"regex": "^https?://",
+		"regex": "^https?://(",
 		"regex_tests": [
 			{ "val": "http://mylogo.png", "shouldMatch": true },
 			{ "val": "https://my-secure-logo.png", "shouldMatch": true },
