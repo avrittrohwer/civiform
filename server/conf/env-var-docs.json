@@ -4,9 +4,9 @@
 		"type": "string",
 		"regex": "^https?://",
 		"regex_tests": [
-			{ "val": "http://mylogo.png", "shouldMatch": true },
+			{ "val": "http://mylogo.png", "shouldMatch": false },
 			{ "val": "https://my-secure-logo.png", "shouldMatch": true },
-			{ "val": "props-not-a-valid-URL", "shouldMatch": false }
+			{ "val": "props-not-a-valid-URL", "shouldMatch": true }
 		]
 	},
 	"WHITELABEL_LOGO_WITH_NAME_URL": {
