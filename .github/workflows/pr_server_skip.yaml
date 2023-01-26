@@ -5,18 +5,18 @@ name: pr_server
 # For more info see:
 # https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/troubleshooting-required-status-checks#handling-skipped-but-required-checks
 
-on:
-  pull_request:
-    branches:
-      - 'main'
-    paths-ignore:
-      - 'server/**'
-      - 'bin/**'
-      - 'browser-test/**'
-      - 'test-support/**'
-      - 'Dockerfile'
-      - 'prod.Dockerfile'
-      - '.github/workflows/**'
+  # on:
+  #   pull_request:
+  #     branches:
+  #       - 'main'
+  #     paths-ignore:
+  #       - 'server/**'
+  #       - 'bin/**'
+  #       - 'browser-test/**'
+  #       - 'test-support/**'
+  #       - 'Dockerfile'
+  #       - 'prod.Dockerfile'
+  #       - '.github/workflows/**'
 
 permissions: read-all
 

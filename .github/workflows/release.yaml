@@ -1,15 +1,15 @@
 name: Create release
 
-on:
-  workflow_dispatch:
-    inputs:
-      commit_sha:
-        description: 'The commit SHA on main for this release'
-        required: true
-
-      release_number:
-        description: 'The number for this release e.g. v1.2.3'
-        required: true
+  # on:
+  #   workflow_dispatch:
+  #     inputs:
+  #       commit_sha:
+  #         description: 'The commit SHA on main for this release'
+  #         required: true
+  # 
+  #       release_number:
+  #         description: 'The number for this release e.g. v1.2.3'
+  #         required: true
 
 permissions:
   pull-requests: read
