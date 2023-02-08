@@ -6,6 +6,7 @@ Requires the following variables to be present in the environment:
 """
 
 import dataclasses
+import env_var_docs
 import json
 import logging
 import os
@@ -90,14 +91,17 @@ def vars_from_application_conf(app_conf_file) -> set[str]:
     return vars
 
 
+
 def vars_from_docs(docs_file) -> set[str]:
     """Parses an env-var-docs.json file and return the set of defined environment variables."""
     docs = json.load(docs_file)
 
     vars = set()
-    for var in docs:
-        vars.add(var)
+    def add(info: env_var_docs.NodeInfo):
+        if info.type == "env_var":
+            vars.add(info.name)
 
+    env_var_docs.visit_nodes(docs, add)
     return vars
 
 

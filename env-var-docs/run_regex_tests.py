@@ -5,6 +5,7 @@ Requires the following variables to be present in the environment:
 """
 
 import dataclasses
+import env_var_docs
 import json
 import logging
 import os
@@ -62,21 +63,24 @@ def run_tests(docs_file) -> list[FailedTest]:
     docs = json.load(docs_file)
 
     failed = []
-    for var, details in docs.items():
-        try:
-            regex_text = details['regex']
-        except KeyError:
+
+    def run_test(node: env_var_docs.NodeInfo):
+        if node.type != "env_var":
+            return
+        if 'regex' not in node.details:
             # It is valid for a Var to not specify a regex field.
             # In this case move on to the next Var.
-            continue
+            return
 
+        regex_text = node.details['regex']
         try:
             regex = re.compile(regex_text)
         except re.error as e:
-            errorexit(f"Unable to compile regular expression '{regex_text}': {e.msg}. Do you need to escape any special characters in the json?")
+            errorexit(
+                f"{node.name}: unable to compile regular expression '{regex_text}': {e.msg}. Do you need to escape any special characters in the json?"
+            )
 
-        tests = details['regex_tests']
-
+        tests = node.details['regex_tests']
         for test in tests:
             val = test['val']
             shouldMatch = test['shouldMatch']
@@ -84,8 +88,9 @@ def run_tests(docs_file) -> list[FailedTest]:
             didMatch = (regex.match(val) != None)
             if didMatch != shouldMatch:
                 failed.append(
-                    FailedTest(var, regex_text, val, shouldMatch, didMatch))
+                    FailedTest(node.name, regex_text, val, shouldMatch, didMatch))
 
+    env_var_docs.visit_nodes(docs, run_test)
     return failed
 
 
