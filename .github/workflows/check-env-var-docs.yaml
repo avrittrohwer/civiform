@@ -29,6 +29,6 @@ jobs:
           pip install check-jsonschema
           check-jsonschema --schemafile $SCHEMA_PATH $ENV_VAR_DOCS_PATH
       - name: Check every env var documented
-        run: python3 $GITHUB_WORKSPACE/env-var-docs/check-vars-documented.py
+        run: python3 $GITHUB_WORKSPACE/env-var-docs/check_vars_documented.py
       - name: Run regular expression tests
-        run: python3 $GITHUB_WORKSPACE/env-var-docs/check-regex-tests.py
+        run: python3 $GITHUB_WORKSPACE/env-var-docs/check_regex_tests.py
