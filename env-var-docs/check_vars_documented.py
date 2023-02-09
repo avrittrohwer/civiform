@@ -6,13 +6,15 @@ Requires the following variables to be present in the environment:
 """
 
 import dataclasses
-import env_var_docs
+import env_var_docs.validator
+import env_var_docs.visitor
 import json
 import logging
 import os
 import pprint
 import re
 import sys
+import typing
 
 
 def errorexit(msg):
@@ -26,6 +28,9 @@ def main():
     with open(config.app_conf_path) as f:
         vars = vars_from_application_conf(f)
     with open(config.docs_path) as f:
+        err = env_var_docs.validator.validate(f)
+        if err != "":
+            errorexit("f{config.docs_path} is not valid. Errors:\n{err}")
         documented_vars = vars_from_docs(f)
 
     undocumented = vars - documented_vars
@@ -70,7 +75,7 @@ def validate_env_variables() -> Config:
     return Config(app_conf, var_docs)
 
 
-def vars_from_application_conf(app_conf_file) -> set[str]:
+def vars_from_application_conf(app_conf_file: typing.TextIO) -> set[str]:
     """Parses an application.conf file and returns the set of referenced environment variables."""
 
     # Matches any UPPER_SNAKE_CASE variables in substitutions like
@@ -82,26 +87,24 @@ def vars_from_application_conf(app_conf_file) -> set[str]:
         match = env_var_re.match(line)
         if match == None:
             continue
+        assert match is not None # Appease mypy.
         var = match.group(1)
         if var == None:
             continue
 
         vars.add(var)
-
     return vars
 
 
 
-def vars_from_docs(docs_file) -> set[str]:
-    """Parses an env-var-docs.json file and return the set of defined environment variables."""
-    docs = json.load(docs_file)
-
+def vars_from_docs(docs_file: typing.TextIO) -> set[str]:
+    """Returns the set of defined environment variables in an environment variable documentation file."""
     vars = set()
-    def add(info: env_var_docs.NodeInfo):
-        if info.type == "env_var":
-            vars.add(info.name)
+    def add(node: env_var_docs.visitor.NodeInfo):
+        if node.type == "variable":
+            vars.add(node.name)
 
-    env_var_docs.visit_nodes(docs, add)
+    env_var_docs.visitor.visit(docs_file, add)
     return vars
 
 

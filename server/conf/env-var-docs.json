@@ -1,7 +1,31 @@
 {
     "Branding": {
-        "description": "Configures CiviForm branding.",
-        "variables": {
+        "group-description": "Configures CiviForm branding.",
+        "members": {
+			"Subgroup": {
+				"group-description": "A subgroup",
+				"members": {
+					"MY_VAR": {
+						"description": "sdfsl",
+						"type": "string",
+                "regex": "^https?://",
+                "regex_tests": [
+                    {
+                        "val": "http://mylogo.png",
+                        "shouldMatch": true
+                    },
+                    {
+                        "val": "https://my-secure-logo.png",
+                        "shouldMatch": true
+                    },
+                    {
+                        "val": "props-not-a-valid-URL",
+                        "shouldMatch": false
+                    }
+                ]
+					}
+				}
+			},
             "WHITELABEL_SMALL_LOGO_URL": {
                 "description": "Small logo used on the login page.",
                 "type": "string",
@@ -61,8 +85,8 @@
         "type": "string"
     },
     "OpenID Connect Logout": {
-        "description": "Configures logout settings for OIDC identity providers.",
-        "variables": {
+        "group-description": "Configures logout settings for OIDC identity providers.",
+        "members": {
             "APPLICANT_OIDC_PROVIDER_LOGOUT": {
                 "description": "Enables central logout: https://docs.civiform.us/contributor-guide/developer-guide/authentication-providers#logout.",
                 "type": "bool"
@@ -82,8 +106,8 @@
         }
     },
     "Oracle Identity Cloud Service": {
-        "description": "Configures IDCS settings. Only set these if CIVIFORM_APPLICANT_IDP=idcs.",
-        "variables": {
+        "group-description": "Configures IDCS settings. Only set these if CIVIFORM_APPLICANT_IDP=idcs.",
+        "members": {
             "IDCS_CLIENT_ID": {
                 "description": "TODO",
                 "type": "string"
@@ -99,8 +123,8 @@
         }
     },
     "Login Radius": {
-        "description": "Configures LoginRadius settings. Only set these if CIVIFORM_APPLICANT_IDP=login-radius.",
-        "variables": {
+        "group-description": "Configures LoginRadius settings. Only set these if CIVIFORM_APPLICANT_IDP=login-radius.",
+        "members": {
             "LOGIN_RADIUS_API_KEY": {
                 "description": "TODO",
                 "type": "string"
@@ -128,8 +152,8 @@
         }
     },
     "Generic OpenID Connect": {
-        "description": "Configures OpenID Connect identity provider settings. Only set these if CIVIFORM_APPLICANT_IDP=generic-oidc.",
-        "variables": {
+        "group-description": "Configures OpenID Connect identity provider settings. Only set these if CIVIFORM_APPLICANT_IDP=generic-oidc.",
+        "members": {
             "APPLICANT_OIDC_PROVIDER_NAME": {
                 "description": "TOOD",
                 "type": "string"
@@ -181,8 +205,8 @@
         }
     },
     "Login.gov": {
-        "description": "Configures Login.gov. Only set these if CIVIFORM_APPLICANT_IDP=login-gov",
-        "variables": {
+        "group-description": "Configures Login.gov. Only set these if CIVIFORM_APPLICANT_IDP=login-gov",
+        "members": {
             "LOGIN_GOV_CLIENT_ID": {
                 "description": "TODO",
                 "type": "string"
@@ -206,8 +230,8 @@
         }
     },
     "Active Directory Federation Services": {
-        "description": "Configures ADFS admin authentication provider",
-        "variables": {
+        "group-description": "Configures ADFS admin authentication provider",
+        "members": {
             "ADFS_CLIENT_ID": {
                 "description": "TODO",
                 "type": "string"
@@ -247,8 +271,8 @@
         "type": "string"
     },
     "Email addresses": {
-        "description": "Email addresses used by CiviForm.",
-        "variables": {
+        "group-description": "Email addresses used by CiviForm.",
+        "members": {
             "AWS_SES_SENDER": {
                 "description": "The email address used for the 'from' email header for emails sent by CiviForm.",
                 "type": "string"
@@ -280,8 +304,8 @@
         "type": "bool"
     },
     "Database": {
-        "description": "Configures postgres database",
-        "variables": {
+        "group-description": "Configures postgres database",
+        "members": {
             "DATABASE_APPLY_DESTRUCTIVE_CHANGES": {
                 "description": "TODO",
                 "type": "bool"
@@ -309,8 +333,8 @@
         "type": "string"
     },
     "Applicant file upload storage": {
-        "description": "Configures file storage provider for applicant-uploaded files.",
-        "variables": {
+        "group-description": "Configures file storage provider for applicant-uploaded files.",
+        "members": {
             "STORAGE_SERVICE_NAME": {
                 "description": "Configue file storage provider.",
                 "type": "string",

@@ -1,18 +1,20 @@
-"""Checks that every regex test in env-var-docs.json passes.
+"""Generates markdown from an environment variable documentation file and write it to a github repository.
 
 Requires the following variables to be present in the environment:
     ENV_VAR_DOCS_PATH: the path to env-var-docs.json.
-    MARKDOWN_OUTPUT_PATH: the path to write generated markdown to.
+    RELEASE_VERSION: CiviForm version being released. 
+    GITHUB_ACCESS_TOKEN: personal access token to call github API with.
+    TARGET_REPO: the target github repository in 'owner/repo-name' format.
+    TARGET_PATH: the relative path within TARGET_REPO to write the file to.
 """
 
 import dataclasses
-import env_var_docs
-import json
-import logging
+import github
+import env_var_docs.validator
+import env_var_docs.visitor
 import os
-import pprint
-import re
 import sys
+import typing
 
 
 def errorexit(msg):
@@ -24,46 +26,72 @@ def errorexit(msg):
 def main():
     config = validate_env_variables()
     with open(config.docs_path) as docs_file:
-        docs = json.load(docs_file)
-        with open(config.markdown_path, mode='w') as markdown_file:
-            write_markdown(docs, markdown_file)
+        err = env_var_docs.validator.validate(docs_file)
+        if err != "":
+            errorexit("f{config.docs_path} is not valid. Errors:\n{err}")
+        markdown = generate_markdown(docs_file)
+
+    gh = github.Github(config.access_token)
+    repo = gh.get_repo(config.repo)
+    repo.create_file(
+        f"{config.repo_path}/{config.version}.md",
+        f"Adds server environment variable documentation for {config.version}",
+        markdown,
+        branch="main"
+        )
 
 
 @dataclasses.dataclass
 class Config:
     docs_path: str
-    markdown_path: str
+    version: str
+    access_token: str
+    repo: str
+    repo_path: str
+
 
 def validate_env_variables() -> Config:
     """Parses expected environment variables and returns a config.
 
     Exits if any there are any validation errors.
     """
-
     try:
         docs = os.environ["ENV_VAR_DOCS_PATH"]
         if not os.path.isfile(docs):
             errorexit(f"'{docs}' does not point to a file")
-        markdown = os.environ["MARKDOWN_OUTPUT_PATH"]
+        version = os.environ["RELEASE_VERSION"]
+        token = os.environ["GITHUB_ACCESS_TOKEN"]
+        repo = os.environ["TARGET_REPO"]
+        path = os.environ["TARGET_PATH"]
+
     except KeyError as e:
         errorexit(f"{e.args[0]} must be present in the environment variables")
 
-    return Config(docs, markdown)
+    return Config(docs, version, token, repo, path)
 
-def write_markdown(parsed_docs, markdown_file):
-    def output(node: env_var_docs.NodeInfo):
-        doc = (
-                f"{'#' * (1+node.level)} {node.name}\n\n"
-                f"{node.details['description']}\n\n"
-        )
-        if node.type == "env_var":
+
+def generate_markdown(docs_file: typing.TextIO) -> str:
+    out = ""
+
+    def output(node: env_var_docs.visitor.NodeInfo):
+        nonlocal out
+        out += f"{'#' * node.level} {node.name}\n\n"
+
+        if node.type == "group":
+            desc = node.details["group-description"]
+        else:
+            desc = node.details["description"]
+        out += (desc + "\n\n")
+
+        if node.type == "variable":
             for key in ['type', 'required', 'values', 'regex']:
                 if key in node.details:
-                    doc += f"- {key.capitalize()}: `{node.details[key]}`\n"
+                    out += f"- {key.capitalize()}: `{node.details[key]}`\n"
+            out += "\n"
 
-        markdown_file.write(doc+"\n")
+    env_var_docs.visitor.visit(docs_file, output)
+    return out
 
-    env_var_docs.visit_nodes(parsed_docs, output)
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,6 @@
     "$id": "https://github.com/civiform/cloud-deploy-infra/blob/main/config-validation/schema/v1.json",
     "title": "Environment variable documentation and validation file schema",
     "description": "Describes the expected format for CiviForm environment variable documentation and validation files.",
-
     "$comment": "File is a object with key-value pairs, each key corresponding to either an environment variable or a group of environment variables.",
     "type": "object",
     "uniqueItems": true,
@@ -13,30 +12,44 @@
             "type": "object",
             "oneOf": [
                 {
-                    "properties": {
-                        "description": {
-                            "description": "Description of what this group of variables configures.",
-                            "type": "string"
-                        },
-                        "variables": {
-                            "patternProperties": {
-                                ".*": {
-                                    "$ref": "#/$defs/env-var"
-                                }
-                            }
-                        }
-                    },
-                    "additionalProperties": false
+                    "$ref": "#/$defs/group"
                 },
                 {
-                    "$ref": "#/$defs/env-var"
+                    "$ref": "#/$defs/variable"
                 }
             ]
         }
     },
-
     "$defs": {
-        "env-var": {
+        "group": {
+            "type": "object",
+            "properties": {
+                "group-description": {
+                    "description": "Description of what this group of variables configures.",
+                    "type": "string"
+                },
+                "members": {
+                    "patternProperties": {
+                        ".*": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/$defs/group"
+                                },
+                                {
+                                    "$ref": "#/$defs/variable"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "group-description",
+				"members"
+            ]
+        },
+        "variable": {
             "type": "object",
             "properties": {
                 "description": {
