@@ -16,6 +16,10 @@ import javax.persistence.Table;
 import play.data.validation.Constraints;
 import services.applicant.ApplicantData;
 
+
+
+
+
 /**
  * An EBean mapped class that represents a single applicant.
  *
