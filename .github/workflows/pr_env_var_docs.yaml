@@ -32,6 +32,10 @@ jobs:
       - name: Install mypy and pytest
         run: pip install mypy pytest
 
+      - name: Install var-env-docs dependencies
+        run: |
+          pip install ./env-var-docs/env_var_docs
+
       - name: Run mypy
         run: mypy --install-types env-var-docs
 
