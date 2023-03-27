@@ -36,7 +36,7 @@ jobs:
         env:
           LOCAL_OUTPUT: false
           RELEASE_VERSION: ${{ github.event.inputs.release_number }}
-          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_AUTOMATION_BOT_ACCESS_TOKEN }}
+          GITHUB_ACCESS_TOKEN: ${{ secrets.AUTOMATION_GITHUB_BOT_ACCESS_TOKEN }}
           TARGET_REPO: avrittrohwer/civiform-docs
           TARGET_PATH: docs/it-manual/sre-playbook/server-environment-variables
         run: bin/env-var-docs-generate-markdown
