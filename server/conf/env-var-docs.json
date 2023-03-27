@@ -1,6 +1,6 @@
 {
   "Branding": {
-    "group_description": "Configuration options for CiviForm branding.",
+    "group_description": "Configuration options for CiviForm branding test change.",
     "members": {
       "WHITELABEL_SMALL_LOGO_URL": {
         "description": "Small logo for the civic entity used on the login page.",

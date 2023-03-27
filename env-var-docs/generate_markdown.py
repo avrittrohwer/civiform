@@ -103,7 +103,7 @@ def main():
         res = repo.create_file(path, msg, markdown, branch="main")
 
     print(
-        f"https://github.com/blob/main/{config.repo}/{path} updated in commit {res['commit']}"
+        f"https://github.com/{config.repo}/blob/main/{path} updated in commit {res['commit']}"
     )
 
 
