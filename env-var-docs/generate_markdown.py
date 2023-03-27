@@ -86,6 +86,8 @@ def main():
         print(markdown)
         exit()
 
+    print(config)
+
     gh = github.Github(config.access_token)
     repo = gh.get_repo(config.repo)
 
@@ -93,6 +95,7 @@ def main():
     path = f"{config.repo_path}/{config.version}.md"
     msg = f"Adds server environment variable documentation for {config.version}"
     try:
+        print(f"Getting info about {path}")
         file = repo.get_contents(path)
         if isinstance(file, list):
             errorexit(
@@ -100,6 +103,7 @@ def main():
 
         res = repo.update_file(path, msg, markdown, file.sha)
     except github.GithubException.UnknownObjectException:
+        print("Creating file")
         res = repo.create_file(path, msg, markdown, branch="main")
 
     print(
